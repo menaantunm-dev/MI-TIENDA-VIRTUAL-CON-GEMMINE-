@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MenaShop | Tienda Virtual de María Mercedes Mena</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #28A745;
+            --dark-color: #343A40;
+            --bg-light: #f8f9fa;
+            --footer-blue: #0a192f;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--dark-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Animación en movimiento para el nombre de la tienda */
+        @keyframes brandMove {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            display: inline-block;
+            animation: brandMove 3s ease-in-out infinite;
+        }
+
+        /* Animación y cambio de color para las secciones superiores */
+        @keyframes navPulse {
+            0% { box-shadow: 0 0 0px rgba(0, 123, 255, 0.2); }
+            50% { box-shadow: 0 0 8px rgba(0, 123, 255, 0.6); }
+            100% { box-shadow: 0 0 0px rgba(0, 123, 255, 0.2); }
+        }
+
+        .animated-nav-link {
+            font-weight: 500;
+            color: #495057 !important;
+            border-radius: 20px;
+            padding: 6px 15px !important;
+            margin: 0 3px;
+            transition: all 0.4s ease;
+            animation: navPulse 2s infinite ease-in-out;
+            display: inline-block;
+        }
+
+        /* Cambios de color dinámicos al pasar el mouse */
+        .link-mujer:hover {
+            background-color: #e83e8c !important;
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        .link-hombre:hover {
+            background-color: #17a2b8 !important;
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        .link-accesorios:hover {
+            background-color: #9b59b6 !important;
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        .link-direccion:hover {
+            background-color: #ffc107 !important;
+            color: #212529 !important;
+            transform: translateY(-2px);
+        }
+
+        .link-todos:hover {
+            background-color: #6c757d !important;
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        /* Product Cards */
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        .product-img-container {
+            height: 200px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+        }
+
+        .product-img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .badge-cart {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+
+        /* Testimonials Section */
+        .testimonials-section {
+            background-color: #fff;
+            padding: 40px 0;
+            border-top: 1px solid #e9ecef;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .testimonial-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .testimonial-img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 2px solid var(--primary-color);
+        }
+
+        /* Footer Estilo Azul */
+        footer {
+            background-color: var(--footer-blue);
+            color: #ced4da;
+            margin-top: auto;
+            border-top: 3px solid var(--primary-color);
+        }
+
+        .footer-avatar {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .footer-avatar:hover {
+            transform: scale(1.1);
+            border-color: #fff;
+        }
+
+        .skill-badge {
+            background-color: #172a45;
+            color: #e9ecef;
+            border: 1px solid #233554;
+            padding: 5px 10px;
+            margin: 3px;
+            display: inline-block;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .social-icon {
+            font-size: 1.8rem;
+            margin: 0 5px;
+            color: #adb5bd;
+            transition: color 0.3s, transform 0.2s;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+        }
+        .si-youtube:hover { color: #FF0000; }
+        .si-linkedin:hover { color: #0077B5; }
+        .si-github:hover { color: #ffffff; }
+        .si-whatsapp:hover { color: #25D366; }
+        .si-instagram:hover { color: #E1306C; }
+        .si-facebook:hover { color: #1877F2; }
+
+        .modal-avatar {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 4px solid var(--primary-color);
+        }
+
+        .biography-text-white {
+            color: #ffffff !important; 
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-white bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#" onclick="filterCategory('all')"><i class="fas fa-tshirt me-2"></i>MenaShop Boutique 🛍️✨</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto text-center my-2 my-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link animated-nav-link link-todos" href="#catalogSection" onclick="filterCategory('all')"><i class="fas fa-border-all me-1"></i>Todos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link animated-nav-link link-mujer" href="#catalogSection" onclick="filterCategory('women')"><i class="fas fa-female me-1"></i>Mujer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link animated-nav-link link-hombre" href="#catalogSection" onclick="filterCategory('men')"><i class="fas fa-male me-1"></i>Hombre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link animated-nav-link link-accesorios" href="#catalogSection" onclick="filterCategory('jewelery')"><i class="fas fa-gem me-1"></i>Accesorios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link animated-nav-link link-direccion" href="#footerSection"><i class="fas fa-map-marker-alt me-1"></i>Dirección</a>
+                    </li>
+                </ul>
+                <div class="text-center">
+                    <button class="btn btn-outline-primary position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartSidebar" aria-controls="cartSidebar">
+                        <i class="fas fa-shopping-basket"></i> Carrito
+                        <span id="cartCount" class="badge bg-danger rounded-pill badge-cart">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5" id="catalogSection">
+        <h2 class="mb-4 fw-bold text-center text-md-start" id="catalogTitle"><i class="fas fa-tags text-primary me-2"></i>Colección de Ropa Exclusiva</h2>
+        <div class="row" id="productsContainer">
+            <div class="text-center w-100 py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando catálogo...</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="testimonials-section my-5">
+        <div class="container">
+            <h3 class="text-center mb-4 fw-bold"><i class="fas fa-comments text-primary me-2"></i>Opiniones de Clientes</h3>
+            <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="testimonial-item mx-auto" style="max-width: 600px;">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="testimonial-img" alt="Cliente 1">
+                            <h5>Carlos Mendoza</h5>
+                            <p class="text-muted italic">"¡Excelente servicio de MenaShop! La calidad de las prendas de ropa es fabulosa y el envío llegó rapidísimo. Recomendado."</p>
+                            <div class="text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="testimonial-item mx-auto" style="max-width: 600px;">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" class="testimonial-img" alt="Cliente 2">
+                            <h5>Lucía Fernández</h5>
+                            <p class="text-muted italic">"Me encantó el vestido que compré, se ajusta perfectamente a la descripción. La pasarela de pago es muy rápida."</p>
+                            <div class="text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Detalles del Artículo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center p-3">
+                        <img id="modalImg" src="" alt="" class="img-fluid" style="max-height: 250px; object-fit: contain;">
+                    </div>
+                    <div class="mt-3">
+                        <span id="modalCategory" class="badge bg-secondary mb-2"></span>
+                        <h4 id="modalPrice" class="text-success fw-bold"></h4>
+                        <p id="modalDescription" class="text-muted small"></p>
+                    </div>
+                    <div class="row g-2 align-items-center mt-3">
+                        <div class="col-4">
+                            <label for="modalQty" class="form-label small mb-0">Cantidad:</label>
+                            <input type="number" id="modalQty" class="form-control" value="1" min="1">
+                        </div>
+                        <div class="col-8">
+                            <button id="modalAddBtn" class="btn btn-success w-100 h-100 mt-4">
+                                <i class="fas fa-cart-plus me-2"></i>Agregar al carrito 🛒
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartSidebar" aria-labelledby="cartSidebarLabel">
+        <div class="offcanvas-header bg-light">
+            <h5 class="offcanvas-title" id="cartSidebarLabel"><i class="fas fa-shopping-cart me-2"></i>Tu Carrito</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column">
+            <div id="cartItemsContainer" class="flex-grow-1 overflow-auto mb-3"></div>
+            <div class="border-top pt-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="h5 mb-0">Total:</span>
+                    <span id="cartTotal" class="h4 mb-0 text-success fw-bold">$0.00</span>
+                </div>
+                <button id="checkoutBtn" class="btn btn-primary w-100 py-2" data-bs-toggle="modal" data-bs-target="#checkoutModal" disabled>
+                    <i class="fas fa-credit-card me-2"></i>Ir a pagar 💳
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-lock me-2"></i>Pasarela de Pago Simulada</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="paymentForm" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Nombre Completo del Cliente</label>
+                            <input type="text" class="form-control" id="payName" required placeholder="Ej. Juan Pérez">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Número de Tarjeta</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
+                                <input type="text" class="form-control" id="payCard" pattern="\d{16}" maxlength="16" required placeholder="4152345678901234">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label small fw-bold">Vencimiento</label>
+                                <input type="text" class="form-control" id="payExp" pattern="(0[1-12]|1[0-2])\/\d{2}" placeholder="MM/AA" maxlength="5" required>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label small fw-bold">CVV</label>
+                                <input type="password" class="form-control" id="payCvv" pattern="\d{3,4}" maxlength="4" placeholder="123" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 py-2 mt-2">
+                            <i class="fas fa-check-circle me-2"></i>Pagar y Descargar Factura ✅
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-5 px-3" id="footerSection">
+        <div class="container">
+            <div class="row align-items-center gy-4">
+                <div class="col-md-4 text-center text-md-start">
+                    <div class="d-flex flex-column flex-sm-row align-items-center gap-3 justify-content-center justify-content-md-start">
+                        <img src="mariafoto.jpg" alt="María Mercedes Mena" class="rounded-circle footer-avatar" data-bs-toggle="modal" data-bs-target="#authorModal" onerror="this.src='https://via.placeholder.com/150'">
+                        <div>
+                            <h5 class="mb-1 text-white fw-bold" data-bs-toggle="modal" data-bs-target="#authorModal" style="cursor:pointer;">María Mercedes Mena</h5>
+                            <p class="small mb-0 text-info">Estudiante de Ingeniería en Sistemas</p>
+                            <p class="small mb-0 text-muted">Universidad O&M</p>
+                        </div>
+                    </div>
+                    <p class="small mt-3 text-muted text-center text-md-start" style="max-width: 320px;">
+                        María Mercedes Mena – Estudiante de ingeniería en sistemas en la Universidad O&M y desarrolladora web. Apasionada por la IA y el diseño de software. <span class="text-info" data-bs-toggle="modal" data-bs-target="#authorModal" style="cursor:pointer; text-decoration: underline;">(Ver Biografía)</span>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-white mb-2 text-uppercase small fw-bold text-center text-md-start"><i class="fas fa-laptop-code me-2 text-primary"></i>Tech Stack & Skills</h6>
+                    <div class="d-flex flex-wrap justify-content-center justify-content-md-start">
+                        <span class="skill-badge"><i class="fas fa-cubes text-info me-1"></i>.NET MAUI</span>
+                        <span class="skill-badge"><i class="fas fa-file-excel text-success me-1"></i>Excel</span>
+                        <span class="skill-badge"><i class="fas fa-database text-info me-1"></i>SQL</span>
+                        <span class="skill-badge"><i class="fab fa-python text-primary me-1"></i>Python</span>
+                        <span class="skill-badge"><i class="fab fa-html5 text-danger me-1"></i>HTML</span>
+                        <span class="skill-badge"><i class="fab fa-css3-alt text-primary me-1"></i>CSS</span>
+                        <span class="skill-badge"><i class="fab fa-js text-warning me-1"></i>JavaScript</span>
+                        <span class="skill-badge"><i class="fab fa-react text-info me-1"></i>React</span>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center text-md-start">
+                    <h6 class="text-white mb-2 text-uppercase small fw-bold text-center">Contacto & Dirección</h6>
+                    <div class="text-center text-muted small mb-3">
+                        <p class="mb-1 text-white fw-medium"><i class="fas fa-map-marker-alt text-danger me-1"></i> Av. Independencia, Santo Domingo, RD</p>
+                        <p class="mb-1 text-white fw-medium"><i class="fas fa-phone text-success me-1"></i> +1 (829) 606-8140</p>
+                        <p class="mb-0 text-white"><i class="fas fa-envelope text-info me-1"></i> m.mena@oym.edu.do</p>
+                    </div>
+                    <div class="d-flex justify-content-center flex-wrap gap-1">
+                        <a href="#" class="social-icon si-facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/mariamena24_/" target="_blank" class="social-icon si-instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon si-linkedin"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://github.com/mariamena24_" target="_blank" class="social-icon si-github"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-icon si-youtube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://wa.me/18296068140" target="_blank" class="social-icon si-whatsapp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-secondary mt-4">
+            <div class="text-center mt-3">
+                <span class="text-white fw-bold">Creado por María Mercedes Mena — Proyecto 5 Mi Tienda Virtual Mena</span>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal fade" id="authorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white shadow-lg">
+                <div class="modal-header border-secondary bg-black">
+                    <h5 class="modal-title text-info fw-bold"><i class="fas fa-user-graduate me-2"></i>Perfil Académico Profesional</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <img src="mariafoto.jpg" alt="María Mercedes Mena" class="rounded-circle modal-avatar mb-3 shadow" onerror="this.src='https://via.placeholder.com/150'">
+                    <h4 class="fw-bold text-white">María Mercedes Mena</h4>
+                    <p class="text-info fw-medium mb-3">Estudiante de Ingeniería en Sistemas - Universidad O&M</p>
+                    
+                    <div class="p-3 rounded text-start border border-secondary" style="background-color: #121212;">
+                        <p class="biography-text-white m-0">
+                            <strong>Biografía:</strong> María Mercedes Mena – Estudiante universitaria de la carrera de Ingeniería en Sistemas en la Universidad O&M y desarrolladora web. Apasionada por la Inteligencia Artificial, el análisis avanzado de datos, el entorno .NET MAUI y el diseño estructurado de sistemas informáticos educativos modernos.
+                        </p>
+                    </div>
+                    <div class="mt-3">
+                        <span class="badge bg-primary p-2 m-1">Desarrollo Web Full-Stack</span>
+                        <span class="badge bg-info text-dark p-2 m-1">Ingeniería en Sistemas</span>
+                        <span class="badge bg-success p-2 m-1">.NET MAUI & Excel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const API_URL = "https://fakestoreapi.com/products";
+        let products = [];
+        let cart = JSON.parse(localStorage.getItem('menashop_cart')) || [];
+        let selectedProduct = null;
+        let currentCategoryFilter = 'all';
+
+        const productsContainer = document.getElementById('productsContainer');
+        const cartCount = document.getElementById('cartCount');
+        const cartItemsContainer = document.getElementById('cartItemsContainer');
+        const cartTotal = document.getElementById('cartTotal');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchProducts();
+            updateCartUI();
+        });
+
+        async function fetchProducts() {
+            try {
+                const response = await fetch(API_URL);
+                const allProducts = await response.json();
+                
+                products = allProducts.filter(p => 
+                    p.category === "men's clothing" || 
+                    p.category === "women's clothing" ||
+                    p.category === "jewelery"
+                );
+                
+                renderProducts();
+            } catch (error) {
+                productsContainer.innerHTML = `<div class="alert alert-danger text-center w-100">Error al conectar con FakeStoreAPI.</div>`;
+            }
+        }
+
+        function renderProducts() {
+            productsContainer.innerHTML = '';
+            
+            let filteredList = products;
+            if(currentCategoryFilter === 'men') {
+                filteredList = products.filter(p => p.category === "men's clothing");
+                document.getElementById('catalogTitle').innerHTML = `<i class="fas fa-male text-primary me-2"></i>Colección de Ropa para Caballeros`;
+            } else if(currentCategoryFilter === 'women') {
+                filteredList = products.filter(p => p.category === "women's clothing");
+                document.getElementById('catalogTitle').innerHTML = `<i class="fas fa-female text-primary me-2"></i>Colección de Ropa para Damas`;
+            } else if(currentCategoryFilter === 'jewelery') {
+                filteredList = products.filter(p => p.category === "jewelery");
+                document.getElementById('catalogTitle').innerHTML = `<i class="fas fa-gem text-primary me-2"></i>Sección de Accesorios Exclusivos`;
+            } else {
+                document.getElementById('catalogTitle').innerHTML = `<i class="fas fa-tags text-primary me-2"></i>Colección de Ropa y Accesorios Exclusivos`;
+            }
+
+            if(filteredList.length === 0) {
+                productsContainer.innerHTML = '<p class="text-center my-5">No se encontraron artículos.</p>';
+                return;
+            }
+
+            filteredList.forEach(prod => {
+                let badgeTxt = "Prenda";
+                if(prod.category === "men's clothing") badgeTxt = "Caballeros";
+                if(prod.category === "women's clothing") badgeTxt = "Damas";
+                if(prod.category === "jewelery") badgeTxt = "Accesorio";
+
+                productsContainer.innerHTML += `
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                        <div class="card product-card">
+                            <div class="product-img-container">
+                                <img src="${prod.image}" class="product-img" alt="${prod.title}">
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="card-title text-truncate fw-bold mb-1">${prod.title}</h6>
+                                <span class="badge bg-light text-dark align-self-start mb-2">${badgeTxt}</span>
+                                <div class="mt-auto">
+                                    <span class="text-success fw-bold h5 d-block mb-2">$${prod.price.toFixed(2)}</span>
+                                    <button class="btn btn-outline-primary btn-sm w-100" onclick="openDetailsModal(${prod.id})">
+                                        <i class="fas fa-eye me-1"></i>Ver más
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        window.filterCategory = function(cat) {
+            currentCategoryFilter = cat;
+            renderProducts();
+        }
+
+        window.openDetailsModal = function(id) {
+            selectedProduct = products.find(p => p.id === id);
+            if(!selectedProduct) return;
+
+            document.getElementById('modalTitle').innerText = selectedProduct.title;
+            document.getElementById('modalImg').src = selectedProduct.image;
+            document.getElementById('modalCategory').innerText = selectedProduct.category;
+            document.getElementById('modalPrice').innerText = `$${selectedProduct.price.toFixed(2)}`;
+            document.getElementById('modalDescription').innerText = selectedProduct.description;
+            document.getElementById('modalQty').value = 1;
+
+            new bootstrap.Modal(document.getElementById('productModal')).show();
+        }
+
+        document.getElementById('modalAddBtn').addEventListener('click', () => {
+            const qty = parseInt(document.getElementById('modalQty').value) || 1;
+            addToCart(selectedProduct, qty);
+            bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
+            
+            const cartElement = document.getElementById('cartSidebar');
+            const bgCart = bootstrap.Offcanvas.getOrCreateInstance(cartElement);
+            bgCart.show();
+        });
+
+        function addToCart(product, qty) {
+            const index = cart.findIndex(item => item.id === product.id);
+            if(index > -1) {
+                cart[index].qty += qty;
+            } else {
+                cart.push({ ...product, qty });
+            }
+            saveCart();
+        }
+
+        window.updateQty = function(id, change) {
+            const item = cart.find(i => i.id === id);
+            if(item) {
+                item.qty += change;
+                if(item.qty <= 0) cart = cart.filter(i => i.id !== id);
+                saveCart();
+            }
+        }
+
+        window.removeFromCart = function(id) {
+            cart = cart.filter(i => i.id !== id);
+            saveCart();
+        }
+
+        function saveCart() {
+            localStorage.setItem('menashop_cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            cartItemsContainer.innerHTML = '';
+            let total = 0, count = 0;
+
+            if(cart.length === 0) {
+                cartItemsContainer.innerHTML = `<p class="text-center text-muted my-5">El carrito está vacío 🛍️</p>`;
+                checkoutBtn.disabled = true;
+            } else {
+                checkoutBtn.disabled = false;
+                cart.forEach(item => {
+                    total += item.price * item.qty;
+                    count += item.qty;
+                    cartItemsContainer.innerHTML += `
+                        <div class="card mb-2 border-0 shadow-sm">
+                            <div class="card-body p-2 d-flex align-items-center">
+                                <img src="${item.image}" style="width: 40px; height: 40px; object-fit: contain;" class="me-2">
+                                <div class="flex-grow-1 min-w-0">
+                                    <h6 class="small text-truncate mb-0 fw-bold">${item.title}</h6>
+                                    <span class="small text-success">$${item.price.toFixed(2)} x ${item.qty}</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-1 ms-2">
+                                    <button class="btn btn-sm btn-light border py-0 px-2" onclick="updateQty(${item.id}, -1)">-</button>
+                                    <button class="btn btn-sm btn-light border py-0 px-2" onclick="updateQty(${item.id}, 1)">+</button>
+                                    <button class="btn btn-sm text-danger" onclick="removeFromCart(${item.id})"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            cartCount.innerText = count;
+            cartTotal.innerText = `$${total.toFixed(2)}`;
+        }
+
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!this.checkValidity()) {
+                e.stopPropagation();
+                this.classList.add('was-validated');
+                return;
+            }
+
+            const clientName = document.getElementById('payName').value;
+            generateInvoicePDF(clientName);
+
+            cart = [];
+            saveCart();
+            this.classList.remove('was-validated');
+            this.reset();
+
+            bootstrap.Modal.getInstance(document.getElementById('checkoutModal')).hide();
+            bootstrap.Offcanvas.getInstance(document.getElementById('cartSidebar')).hide();
+            alert("¡Pago exitoso! Tu factura en PDF se ha descargado.");
+        });
+
+        function generateInvoicePDF(clientName) {
+            const { jsPDF } = window.jspdf;
+            const pageWidth = 226; 
+            let pageHeight = 220 + (cart.length * 25); 
+            
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: [pageWidth, pageHeight] });
+            doc.setFont("courier", "normal");
+            doc.setFontSize(10);
+
+            let y = 25;
+            doc.setFont("courier", "bold");
+            doc.text("*** MENASHOP ***", pageWidth/2, y, { align: 'center' });
+            y += 14;
+            doc.setFont("courier", "normal");
+            doc.text("PROYECTO VIRTUAL MENA", pageWidth/2, y, { align: 'center' });
+            y += 12;
+            doc.text("Desarrolladora: M. Mercedes Mena", pageWidth/2, y, { align: 'center' });
+            y += 16;
+            doc.text("--------------------------------", pageWidth/2, y, { align: 'center' });
+            y += 14;
+
+            doc.text(`FECHA: ${new Date().toLocaleString()}`, 15, y); y += 12;
+            doc.text(`CLIENTE: ${clientName.toUpperCase()}`, 15, y); y += 16;
+            doc.text("--------------------------------", pageWidth/2, y, { align: 'center' });
+            y += 14;
+
+            doc.setFont("courier", "bold");
+            doc.text("DESCRIPCION/CANT          PRECIO", 15, y); y += 12;
+            doc.text("--------------------------------", pageWidth/2, y, { align: 'center' });
+            y += 14;
+            doc.setFont("courier", "normal");
+
+            let subtotal = 0;
+            cart.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                subtotal += itemTotal;
+                doc.text(`${item.title.substring(0, 16)}`, 15, y); y += 11;
+                doc.text("   " + item.qty + " x $" + item.price.toFixed(2), 15, y);
+                doc.text("$" + itemTotal.toFixed(2), pageWidth - 15, y, { align: 'right' });
+                y += 15;
+            });
+
+            doc.text("--------------------------------", pageWidth/2, y, { align: 'center' });
+            y += 14;
+            doc.setFont("courier", "bold");
+            doc.text("TOTAL DE LA COMPRA:", 15, y);
+            doc.text("$" + subtotal.toFixed(2), pageWidth - 15, y, { align: 'right' });
+            y += 20;
+
+            doc.setFont("courier", "bold");
+            doc.text("INFORMACION DE ENVIO:", 15, y); y += 12;
+            doc.setFont("courier", "normal");
+            doc.text("TIEMPO ESTIMADO: 2 a 3 dias", 15, y); y += 12;
+            doc.text("LABORABLES vía Mensajería Express.", 15, y); y += 18;
+
+            doc.text("--------------------------------", pageWidth/2, y, { align: 'center' });
+            y += 14;
+
+            doc.setFont("courier", "bold");
+            doc.text("¡GRACIAS POR SU COMPRA!", pageWidth/2, y, { align: 'center' });
+
+            doc.save("Factura_MenaShop_" + Date.now() + ".pdf");
+        }
+    </script>
+</body>
+</html>
